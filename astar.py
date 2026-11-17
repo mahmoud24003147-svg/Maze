@@ -78,12 +78,3 @@ def a_star_search(grid, src, dest):
     return visited, [], None      
 
 
-# if __name__ == "__main__":
-#     grid = [
-#         [1, 1, 9],
-#         [1, 0, 1],
-#         [1, 1, 1],
-#     ]
-    visited, path, cost = a_star_search(grid, (0, 0), (0, 2))
-    print(visited)
-    print(path, cost)
