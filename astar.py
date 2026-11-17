@@ -1,80 +1,71 @@
+
 import heapq
 
+def a_star_search(grid, start, goal):
 
-class Cell:
-    def __init__(self):
-        self.parent_i = 0
-        self.parent_j = 0
-        self.f = float('inf')
-        self.g = float('inf')
-        self.h = 0
+    rows = len(grid)
+    cols = len(grid[0])
 
+    def heuristic(pos):
+        return abs(pos[0] - goal[0]) + abs(pos[1] - goal[1])
 
-def calculate_h_value(row, col, dest):
-    return abs(row - dest[0]) + abs(col - dest[1])
+    pq = [(heuristic(start), 0, start)]
 
-
-def trace_path(cell_details, dest):
-    path = []
-    row, col = dest
-    while not (cell_details[row][col].parent_i == row
-               and cell_details[row][col].parent_j == col):
-        path.append((row, col))
-        row, col = cell_details[row][col].parent_i, cell_details[row][col].parent_j
-    path.append((row, col))
-    path.reverse()
-    return path
-
-
-def a_star_search(grid, src, dest):
-    ROW, COL = len(grid), len(grid[0])
-    src, dest = tuple(src), tuple(dest)
-
-    def is_valid(r, c):
-        return 0 <= r < ROW and 0 <= c < COL
-
-    if grid[src[0]][src[1]] == 0 or grid[dest[0]][dest[1]] == 0:
-        return [], [], None
-    if src == dest:
-        return [src], [src], 0
-
-    closed_list = [[False] * COL for _ in range(ROW)]
-    cell_details = [[Cell() for _ in range(COL)] for _ in range(ROW)]
-
-    i, j = src
-    cell_details[i][j].f = 0
-    cell_details[i][j].g = 0
-    cell_details[i][j].parent_i = i
-    cell_details[i][j].parent_j = j
-
-    open_list = [(0.0, i, j)]
+    g_score = {start: 0}
+    parent = {}    
     visited = []
 
-    while open_list:
-        _, i, j = heapq.heappop(open_list)
+    while pq:
 
-        if closed_list[i][j]:      
+        f, g, current = heapq.heappop(pq)
+  
+        if g != g_score.get(current):
             continue
-        closed_list[i][j] = True
-        visited.append((i, j))
 
-        if (i, j) == dest:
-            return visited, trace_path(cell_details, dest), cell_details[i][j].g
+        visited.append(current)
 
-        for di, dj in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-            ni, nj = i + di, j + dj
-            if is_valid(ni, nj) and grid[ni][nj] != 0 and not closed_list[ni][nj]:
-                g_new = cell_details[i][j].g + grid[ni][nj]
-                if g_new < cell_details[ni][nj].g:
-                    h_new = calculate_h_value(ni, nj, dest)
-                    f_new = g_new + h_new
-                    heapq.heappush(open_list, (f_new, ni, nj))
-                    cell_details[ni][nj].f = f_new
-                    cell_details[ni][nj].g = g_new
-                    cell_details[ni][nj].h = h_new
-                    cell_details[ni][nj].parent_i = i
-                    cell_details[ni][nj].parent_j = j
+        if current == goal:
+            path = [goal]
 
-    return visited, [], None      
+            while path[-1] != start:
+                path.append(parent[path[-1]])
 
+            path.reverse()
 
+            return visited, path, g
+
+        row, col = current
+
+        directions = [
+            (0, 1),
+            (0, -1),
+            (1, 0),
+            (-1, 0)
+        ]
+
+        for dr, dc in directions:
+
+            nr = row + dr
+            nc = col + dc
+
+            if 0 <= nr < rows and 0 <= nc < cols:
+
+                if grid[nr][nc] != 0:
+
+                    neighbor = (nr, nc)
+
+                    new_g = g + grid[nr][nc]
+
+                    if new_g < g_score.get(neighbor, float('inf')):
+
+                        g_score[neighbor] = new_g
+                        parent[neighbor] = current
+
+                        new_f = new_g + heuristic(neighbor)
+
+                        heapq.heappush(
+                            pq,
+                            (new_f, new_g, neighbor)
+                        )
+
+    return visited, [], None

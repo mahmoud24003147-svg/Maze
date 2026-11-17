@@ -126,7 +126,7 @@ class App:
         for key, label in BUTTONS:
             rect = self.buttons[key]
             active = key == self.tool or key == self.algo
-            pygame.draw.rect(self.screen, GREEN if active else BTN, rect, border_radius=6)
+            pygame.draw.rect(self.screen, GREEN if active else BTN, rect, border_radius=12)
             text = self.font.render(label, True, WHITE if active else BTN_TEXT)
             self.screen.blit(text, text.get_rect(center=rect.center))
 
