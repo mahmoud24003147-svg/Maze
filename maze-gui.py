@@ -5,22 +5,25 @@ import pygame
 
 from astar import a_star_search
 
+
 ROWS, COLS, SIZE, TOP = 15, 25, 32, 50
 W, H = 800, 500
 STEPS_PER_FRAME = 2
 
+
 BG, GRID_LINE = (0, 0, 0), (160, 160, 160)
-WALL = (70, 70, 70)                      
+WALL = (70, 70, 70)                    
 START, GOAL = (46, 158, 68), (217, 48, 37)
 VISITED, PATH = (143, 208, 245), (255, 193, 7)
 BTN, BTN_TEXT = (255, 255, 255), (20, 20, 20)
 GREEN, WHITE = (46, 158, 68), (255, 255, 255)
 
+
 ALGORITHMS = {"astar": a_star_search}
 
 BUTTONS = [
     ("wall", "Wall"), ("weight", "Weight"), ("start", "Start"), ("goal", "Goal"),
-    ("astar", "A*"), 
+    ("astar", "A*"), ("bfs", "BFS"),
     ("clear", "Clear"),
 ]
 
@@ -34,10 +37,11 @@ class App:
         self.font = pygame.font.SysFont("arial", 16)
         self.small = pygame.font.SysFont("arial", 12)
 
+       
         self.grid = [[1] * COLS for _ in range(ROWS)]
-        self.start, self.goal = (1, 1), (9, 9)
+        self.start, self.goal = (1, 1), (13, 23)
         self.tool = "wall"
-        self.algo = None          
+        self.algo = None         
         self.paint = None
 
         self.visited = set()
@@ -122,7 +126,7 @@ class App:
         for key, label in BUTTONS:
             rect = self.buttons[key]
             active = key == self.tool or key == self.algo
-            pygame.draw.rect(self.screen, GREEN if active else BTN, rect, border_radius=10)
+            pygame.draw.rect(self.screen, GREEN if active else BTN, rect, border_radius=6)
             text = self.font.render(label, True, WHITE if active else BTN_TEXT)
             self.screen.blit(text, text.get_rect(center=rect.center))
 
