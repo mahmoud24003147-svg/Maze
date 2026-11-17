@@ -4,7 +4,7 @@ from collections import deque
 import pygame
 
 from astar import a_star_search
-
+from bfs import bfs_search
 
 ROWS, COLS, SIZE, TOP = 15, 25, 32, 50
 W, H = 800, 500
@@ -19,7 +19,7 @@ BTN, BTN_TEXT = (255, 255, 255), (20, 20, 20)
 GREEN, WHITE = (46, 158, 68), (255, 255, 255)
 
 
-ALGORITHMS = {"astar": a_star_search}
+ALGORITHMS = {"astar": a_star_search, "bfs": bfs_search}
 
 BUTTONS = [
     ("wall", "Wall"), ("weight", "Weight"), ("start", "Start"), ("goal", "Goal"),
